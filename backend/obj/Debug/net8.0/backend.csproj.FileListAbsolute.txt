@@ -144,3 +144,4 @@ D:\FMI\Licenta-app\backend\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.
 D:\FMI\Licenta-app\backend\bin\Debug\net8.0\Scrutor.dll
 D:\FMI\Licenta-app\backend\bin\Debug\net8.0\Swashbuckle.AspNetCore.Filters.dll
 D:\FMI\Licenta-app\backend\bin\Debug\net8.0\Swashbuckle.AspNetCore.Filters.Abstractions.dll
+D:\FMI\Licenta-app\backend\obj\Debug\net8.0\backend.sourcelink.json

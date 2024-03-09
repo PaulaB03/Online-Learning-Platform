@@ -1,7 +1,7 @@
-﻿using backend.Models;
+﻿using backend.Data;
+using backend.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -10,14 +10,16 @@ namespace backend.Services
 {
     public class AuthService : IAuthService
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly DataContext _context;
         private readonly IConfiguration _config;
 
-        public AuthService(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration config)
+        public AuthService(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, DataContext context, IConfiguration config)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _context = context;
             _config = config;
         }
 
@@ -34,10 +36,12 @@ namespace backend.Services
 
         public async Task<bool> Register(Login user)
         {
-            var identityUser = new IdentityUser
+            var identityUser = new User
             {
                 UserName = user.UserName,
-                Email = user.Email
+                Email = user.Email,
+                FirstName = "",
+                LastName = ""
             };
 
             var result = await _userManager.CreateAsync(identityUser, user.Password);
@@ -70,6 +74,19 @@ namespace backend.Services
             }
 
             var result = await _userManager.AddToRoleAsync(user, role);
+
+            // If the role is Instructor add Instructor
+            if (role == "Instructor" && result.Succeeded)
+            {
+                var existingInstructor = await _context.Instructors.FindAsync(user.Id);
+                if (existingInstructor == null)
+                {
+                    var instructor = new Instructor { InstructorId = user.Id };
+                    _context.Instructors.Add(instructor);
+                    await _context.SaveChangesAsync();
+                }
+            }
+       
             return result.Succeeded;
         }
 

@@ -21,5 +21,12 @@ namespace backend.Controllers
         {
             return "You pressed me Admin";
         }
+
+        [HttpGet("3")]
+        [Authorize(Roles = "Instructor")]
+        public string GetInstructor()
+        {
+            return "You pressed instructor";
+        }
     }
 }

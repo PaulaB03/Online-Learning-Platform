@@ -1,4 +1,5 @@
 using backend.Data;
+using backend.Models;
 using backend.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -16,7 +17,7 @@ builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+builder.Services.AddIdentity<User, IdentityRole>(options =>
 {
     options.Password.RequiredLength = 10;
     options.Password.RequireDigit = true;
@@ -47,7 +48,10 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+// Services
 builder.Services.AddTransient<IAuthService, AuthService>();
+builder.Services.AddScoped<ICourseService, CourseService>();
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

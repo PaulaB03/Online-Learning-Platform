@@ -1,7 +1,13 @@
-﻿namespace backend.Models
+﻿using Microsoft.AspNetCore.Identity;
+using System.Text.Json.Serialization;
+
+namespace backend.Models
 {
-    public class User
+    public class User : IdentityUser
     {
-        public int Id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        [JsonIgnore]
+        public virtual Instructor Instructor { get; set; }
     }
 }
