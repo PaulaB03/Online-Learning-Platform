@@ -1,5 +1,6 @@
 ﻿using backend.Data;
 using backend.Models;
+using backend.Services.Interface;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -34,14 +35,15 @@ namespace backend.Services
             return await _userManager.CheckPasswordAsync(identityUser, user.Password);
         }
 
-        public async Task<bool> Register(Login user)
+        public async Task<bool> Register(Register user)
         {
             var identityUser = new User
             {
                 UserName = user.UserName,
                 Email = user.Email,
-                FirstName = "",
-                LastName = ""
+                PhoneNumber = user.PhoneNumber,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
             };
 
             var result = await _userManager.CreateAsync(identityUser, user.Password);

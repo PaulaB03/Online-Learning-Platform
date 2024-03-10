@@ -17,5 +17,6 @@ namespace backend.Models
         [ForeignKey("InstructorId")]
         [JsonIgnore]
         public virtual Instructor? Instructor { get; set; }
+        public virtual ICollection<Module> Modules { get; set; } = new List<Module>();
     }
 }

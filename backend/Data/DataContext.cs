@@ -11,6 +11,8 @@ namespace backend.Data
 
         public DbSet<Instructor> Instructors { get; set; }
         public DbSet<Course> Courses { get; set; }
+        public DbSet<Module> Modules { get; set; }
+        public DbSet<Lesson> Lessons { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -24,9 +26,21 @@ namespace backend.Data
 
             // Instructor-Course -- one-to-many
             modelBuilder.Entity<Course>()
-            .HasOne(c => c.Instructor) 
-            .WithMany(i => i.Courses) 
-            .HasForeignKey(c => c.InstructorId);
+                .HasOne(c => c.Instructor) 
+                .WithMany(i => i.Courses) 
+                .HasForeignKey(c => c.InstructorId);
+
+            // Course-Module -- one-to-many
+            modelBuilder.Entity<Module>()
+                .HasOne(m => m.Course)
+                .WithMany(c => c.Modules)
+                .HasForeignKey(m => m.CourseId);
+
+            // Module-Lesson -- one-to-many
+            modelBuilder.Entity<Lesson>()
+                .HasOne(l => l.Module)
+                .WithMany(m => m.Lessons)
+                .HasForeignKey(l => l.ModuleId);
         }
     }
 }

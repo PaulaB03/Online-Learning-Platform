@@ -1,6 +1,6 @@
 ﻿using backend.Data;
 using backend.Models;
-using backend.Services;
+using backend.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +9,6 @@ namespace backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class CourseController : ControllerBase
     {
         private readonly ICourseService _courseService;
@@ -21,14 +20,14 @@ namespace backend.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Instructor")]
-        public async Task<IActionResult> AddCourse([FromBody] Course course)
+        public async Task<IActionResult> AddCourse(Course course)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            bool result = await _courseService.AddCourse(course);
+            var result = await _courseService.AddCourse(course);
             if (result)
             {
                 return Ok("Course added successfully.");
@@ -36,6 +35,55 @@ namespace backend.Controllers
             else
             {
                 return BadRequest("Failed to add the course.");
+            }
+        }
+
+        [HttpPut("{courseId}")]
+        [Authorize(Roles = "Instructor")]
+        public async Task<IActionResult> UpdateCourse(int courseId, Course course)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _courseService.UpdateCourse(courseId, course);
+            if (result)
+            {
+                return Ok("Course updated successfully.");
+            }
+            else
+            {
+                return BadRequest("Failed to update course.");
+            }
+        }
+
+        [HttpDelete("{courseId}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteCourse(int courseId)
+        {
+            var result = await _courseService.DeleteCourse(courseId);
+            if (result)
+            {
+                return Ok("Course deleted successfully.");
+            }
+            else
+            {
+                return BadRequest("Failed to delete course.");
+            }
+        }
+
+        [HttpGet("{courseId}")]
+        public async Task<IActionResult> GetCourseById(int courseId)
+        {
+            var course = await _courseService.GetCourseById(courseId);
+            if (course == null)
+            {
+                return NotFound($"Course with id {courseId} not found!");
+            }
+            else
+            {
+                return Ok(course);
             }
         }
     }

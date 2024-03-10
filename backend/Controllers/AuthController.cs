@@ -1,5 +1,5 @@
 ﻿using backend.Models;
-using backend.Services;
+using backend.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +18,7 @@ namespace backend.Controllers
         }
 
         [HttpPost("Register")]
-        public async Task<IActionResult> Register(Login user)
+        public async Task<IActionResult> Register(Register user)
         {
             if (await _authService.Register(user))
             {
